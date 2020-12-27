@@ -3,12 +3,10 @@
 #include <ctime>
 
 #define bRead(value, bit) (((value) >> (bit)) & 0x01)
-#define bWrite(value, bit, bitvalue) (bitvalue ? (value) |= (1UL << (bit)) : (value) &= ~(1UL << (bit)))
-
 #define cactus '|'
 #define player '@'
 
-void sleep(float);
+void sleep(int);
 void init();
 
 int main() {
@@ -17,7 +15,7 @@ int main() {
 	int map = 0, plry = 10, score = 0, asd = 2;
 
 	while (true) {
-		if (!bRead(map, 1) && !bRead(map, 2) && !bRead(map, 3) && !bRead(map, 4) && !bRead(map, 5)) bWrite(map, 0, rand() % 2);
+		if (!bRead(map, 1) && !bRead(map, 2) && !bRead(map, 3) && !bRead(map, 4) && !bRead(map, 5)) map |= 1UL;
 
 		if (plry < 10) {
 			if (asd) asd -= 1;
@@ -48,21 +46,21 @@ int main() {
 
 		map <<= 1;
 		refresh();
-		sleep(0.15);
+		sleep(150);
 	}
-	sleep(2.00);
+	sleep(2000);
 
 	endwin();
 	return 0;
 }
 
-void sleep(float seconds) {
+void sleep(int mseconds) {
     clock_t startClock = clock();
-    while(clock() < startClock + (seconds * CLOCKS_PER_SEC));
+    while(clock() < startClock + (((float)mseconds / 1000) * CLOCKS_PER_SEC));
 }
 
 void init() {
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 
 	initscr();
 	start_color();
